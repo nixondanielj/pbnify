@@ -18,11 +18,14 @@ namespace AIPBN.Functions
         {
             using (var httpClient = new HttpClient())
             {
+                var extension = ".png";
+                
                 var imageTask = httpClient.GetStreamAsync(url);
                 // Create a Blob client object
                 BlobContainerClient container = new BlobContainerClient(AZURE_STORAGE_CONNECTION_STRING, AZURE_STORAGE_CONTAINER_NAME);
                 await container.CreateIfNotExistsAsync();
-                var blobClient = container.GetBlobClient(Guid.NewGuid().ToString());
+                var blobClient = container.GetBlobClient($"{Guid.NewGuid().ToString()}{extension}");
+
                 // Upload the image to the blob
                 await blobClient.UploadAsync(await imageTask, true);
                 // Return the public URL of the uploaded image

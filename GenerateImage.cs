@@ -32,26 +32,31 @@ namespace AIPBN.Functions
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             dynamic data = JsonConvert.DeserializeObject(requestBody);
             string prompt = data?.prompt;
+            log.LogInformation($"Prompt received: {prompt}");
 
             // Call DALL-E to generate image
-            var imageUrl = await GetImageFromPrompt(prompt);
+            var imageUrl = await GetImageFromPrompt(prompt, log);
+            log.LogInformation($"Generated image URL: {imageUrl}");
 
             // Store image to Azure Blob Storage
             var azureStorageHelper = new AzureStorageHelper();
             var imageUri = await azureStorageHelper.UploadFromUrl(imageUrl);
 
             // Return image URL
-            return new JsonResult(new { URL = imageUri });
+            log.LogInformation($"Azure Blob Storage image URL: {imageUri}");
+            return new JsonResult(new { url = imageUri });
         }
 
-        public static async Task<string> GetImageFromPrompt(string prompt)
+        public static async Task<string> GetImageFromPrompt(string prompt, ILogger log)
         {
-            var input = new
+            var input = JsonConvert.SerializeObject(new
             {
-                Prompt = prompt,
-                N = "1",
-                Size = "1024x1024"
-            };
+                prompt = prompt,
+                n = 1,
+                size = "1024x1024"
+            });
+
+            log.LogInformation($"OpenAI request: {input}");
 
             dynamic resp = null;
 
@@ -60,14 +65,17 @@ namespace AIPBN.Functions
                 client.DefaultRequestHeaders.Clear();
                 client.DefaultRequestHeaders.Authorization =
                      new AuthenticationHeaderValue("Bearer", OPENAI_KEY);
-                var Message = await client.
+                var response = await client.
                       PostAsync("https://api.openai.com/v1/images/generations",
-                      new StringContent(JsonConvert.SerializeObject(input),
+                      new StringContent(input,
                       Encoding.UTF8, "application/json"));
                 
-                if (Message.IsSuccessStatusCode)
+                log.LogInformation($"OpenAI response status code: {response.StatusCode.ToString()}");
+                log.LogInformation($"OpenAI response: {response.ToString()}");
+                log.LogInformation($"OpenAI response content: {await response.Content.ReadAsStringAsync()}");
+                if (response.IsSuccessStatusCode)
                 {
-                    var content = await Message.Content.ReadAsStringAsync();
+                    var content = await response.Content.ReadAsStringAsync();
                     resp = JsonConvert.DeserializeObject<dynamic>(content);
                 }
             }

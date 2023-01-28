@@ -26,21 +26,17 @@ angular.module('pbnApp')
 		$scope.colorInfoVisible = false;
 
 		$scope.submitPrompt = function (prompt) {
-			var apiKey = "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";
 			var request = new XMLHttpRequest();
-			var url = "https://api.openai.com/v1/images/generations";
+			var url = "https://aipbnprototype.azurewebsites.net/api/generateimage";
 			var data = {
-				"prompt": prompt,
-				"n": 1,
-				"size": "1024x1024"
+				"prompt": prompt
 			};
 			request.open("POST", url, true);
 			request.setRequestHeader("Content-Type", "application/json");
-			request.setRequestHeader("Authorization", "Bearer " + apiKey);
 			request.onreadystatechange = function () {
 				if (request.readyState === 4 && request.status === 200) {
 					var response = JSON.parse(request.responseText);
-					var imgSrc = response.data[0].url;
+					var imgSrc = response.url;
 					$scope.imageLoaded(imgSrc);
 				}
 			};
@@ -50,6 +46,7 @@ angular.module('pbnApp')
 		$scope.imageLoaded = function (imgSrc) {
 			var img = new Image();
 			img.src = imgSrc;
+			img.crossOrigin = "Anonymous";
 			img.onload = function () {
 				var c = document.getElementById("img-canvas");
 				c.width = document.getElementById("widthSlider").value;

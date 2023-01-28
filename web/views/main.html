@@ -1,12 +1,13 @@
 <div class="col" id="prompt-container">
   <form>
-    <input type="text" id="prompt" ng-model="prompt">
-    <button type="submit" class="btn btn-primary" ng-click="submitPrompt(prompt)">Create</button>
+    <input type="text" id="prompt" ng-model="prompt" ng-disabled="loadingImage">
+    <button type="submit" class="btn btn-primary" ng-disabled="loadingImage" ng-click="submitPrompt(prompt)">Create</button>
   </form>
+  <h3 ng-show="loadingImage">Image Loading...</h3>
 </div>
 
 <div class="col" id="description">
-  <p ng-class="{ 'other-step': step != 'load' }">1. Load an image.</p>
+  <p ng-class="{ 'other-step': step != 'load' }">1. Enter a prompt for the AI to generate an image</p>
   <p ng-class="{ 'other-step': step != 'select' }">2. Click some points on the image to select your color palette.</p>
   <p ng-class="{ 'other-step': step != 'select' || palette.length < 2 }">3. Click Go and the image will be converted to a paint by number template.</p>
   <p ng-class="{ 'other-step': step != 'result' }">4. Save the outline and palette, print them out, and paint/color.</p>

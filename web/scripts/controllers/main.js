@@ -26,6 +26,7 @@ angular.module('pbnApp')
 		$scope.colorInfoVisible = false;
 
 		$scope.submitPrompt = function (prompt) {
+			$scope.loadingImage = true;
 			var request = new XMLHttpRequest();
 			var url = "https://aipbnprototype.azurewebsites.net/api/generateimage";
 			var data = {
@@ -34,6 +35,7 @@ angular.module('pbnApp')
 			request.open("POST", url, true);
 			request.setRequestHeader("Content-Type", "application/json");
 			request.onreadystatechange = function () {
+				$scope.loadingImage = false;
 				if (request.readyState === 4 && request.status === 200) {
 					var response = JSON.parse(request.responseText);
 					var imgSrc = response.url;

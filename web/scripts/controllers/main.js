@@ -45,6 +45,94 @@ angular.module('pbnApp')
 			request.send(JSON.stringify(data));
 		}
 
+		var findBiggestColorRange = (rgbValues) => {
+			let rMin = Number.MAX_VALUE;
+			let gMin = Number.MAX_VALUE;
+			let bMin = Number.MAX_VALUE;
+
+			let rMax = Number.MIN_VALUE;
+			let gMax = Number.MIN_VALUE;
+			let bMax = Number.MIN_VALUE;
+
+			rgbValues.forEach((pixel) => {
+				rMin = Math.min(rMin, pixel.r);
+				gMin = Math.min(gMin, pixel.g);
+				bMin = Math.min(bMin, pixel.b);
+
+				rMax = Math.max(rMax, pixel.r);
+				gMax = Math.max(gMax, pixel.g);
+				bMax = Math.max(bMax, pixel.b);
+			});
+
+			const rRange = rMax - rMin;
+			const gRange = gMax - gMin;
+			const bRange = bMax - bMin;
+
+			const biggestRange = Math.max(rRange, gRange, bRange);
+			if (biggestRange === rRange) {
+				return "r";
+			} else if (biggestRange === gRange) {
+				return "g";
+			} else {
+				return "b";
+			}
+		};
+
+		const quantization = (rgbValues, depth) => {
+			const MAX_DEPTH = 3;
+			if (depth === MAX_DEPTH || rgbValues.length === 0) {
+				const color = rgbValues.reduce(
+					(prev, curr) => {
+						prev.r += curr.r;
+						prev.g += curr.g;
+						prev.b += curr.b;
+
+						return prev;
+					},
+					{
+						r: 0,
+						g: 0,
+						b: 0,
+					}
+				);
+
+				color.r = Math.round(color.r / rgbValues.length);
+				color.g = Math.round(color.g / rgbValues.length);
+				color.b = Math.round(color.b / rgbValues.length);
+				return [color];
+			}
+
+			const componentToSortBy = findBiggestColorRange(rgbValues);
+			rgbValues.sort((p1, p2) => {
+				return p1[componentToSortBy] - p2[componentToSortBy];
+			});
+
+			const mid = rgbValues.length / 2;
+			return [
+				...quantization(rgbValues.slice(0, mid), depth + 1),
+				...quantization(rgbValues.slice(mid + 1), depth + 1),
+			];
+		};
+
+		var buildRgb = (imageData) => {
+			const rgbValues = [];
+			for (let i = 0; i < imageData.length; i += 4) {
+				const rgb = {
+					r: imageData[i],
+					g: imageData[i + 1],
+					b: imageData[i + 2],
+				};
+				rgbValues.push(rgb);
+			}
+			return rgbValues;
+		};
+
+		var extractPalette = function (imageData) {
+			const rgb = buildRgb(imageData.data);
+			const palette = quantization(rgb, 0);
+			return palette;
+		};
+
 		$scope.imageLoaded = function (imgSrc) {
 			var img = new Image();
 			img.src = imgSrc;
@@ -59,6 +147,11 @@ angular.module('pbnApp')
 				$scope.ctx = c.getContext("2d");
 				$scope.ctx.drawImage(img, 0, 0, c.width, c.height);
 				$scope.step = "select";
+				const imageData = $scope.ctx.getImageData(0, 0, c.width, c.height);
+				const palette = extractPalette(imageData);
+				for (let color of palette) {
+					$scope.addColor(color);
+				}
 				$scope.$apply();
 			};
 		};

@@ -2,19 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>PBNify</title>
-    <meta name="description" content="A free online tool that turns any image of your choice into a paint by number.">
-    <meta property="og:title" content="PBNify">
-    <meta property="og:site_name" content="PBNify">
-    <meta property="og:url" content="https://pbnify.com">
-    <meta property="og:image" content="https://pbnify.com/images/logo-post.png">
-    <meta property="og:description" content="A free online tool that turns any image of your choice into a paint by number.">
-    <meta property="og:type" content="website">
-    <meta name="twitter:site" content="@danbmunro">
-    <meta name="twitter:title" content="PBNify">
-    <meta name="twitter:url" content="https://pbnify.com">
-    <meta name="twitter:description" content="A free online tool that turns any image of your choice into a paint by number.">
-    <meta name="twitter:image:src" content="https://pbnify.com/images/logo-post.png">
+    <title>PBN.AI</title>
 
     <meta name="viewport" content="width=device-width">
 
@@ -26,52 +14,11 @@
   <body ng-app="pbnApp">
 
     <div class="container">
-      <div style="text-align: right;"><a href="https://sqhs.club/pbnify/">Chinese Simplified</a></div>
-
-      <div class="col" id="header">
-	<img id="title" src="images/logo-02.png" alt="PBNify">
-	<div id="subtitle">custom paint by number generator</div>
-      </div>
-
+      <h2>Paint-by-Numbers - AI</h2>
       <div ng-include="'views/main.html'" ng-controller="MainCtrl"></div>
-      
-      <div ng-if="false">
-	Your browser must be able to retreive and run javascript
-	libraries to use PBNify, since it runs locally in your
-	browser.
-      </div>
     </div>
 
-    <div class="container" id="footer">
-      <p>
-        <strong>To build a full paint by number kit from a photo including canvas and paints, <a href="https://paintablepictures.com/products/personalized-paint-by-numbers-custom-photo-upload" target="_blank">check out Paintable Pictures</a>.</strong>
-      </p>
-      <!-- <p> -->
-	<!-- Email <a href="mailto:dan@dmun.ro">dan@dmun.ro</a> with
-	questions, comments or bug reports, but check
-	the <a href="faq.html" target="_blank">FAQ</a> first. -->
-        Read the <a href="faq.html" target="_blank">FAQ</a> for answers to common issues.
-      <!-- </p> -->
-      <br>
-      <!-- <p> -->
-        Donations: Venmo: Daniel-Munro |
-        <a href="https://paypal.me/danbmunro" target="_blank">paypal.me/danbmunro</a> |
-        <!-- <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" style="display: inline-block; vertical-align: middle;"> -->
-        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" style="display: inline-block; vertical-align: middle;">
-          <input type="hidden" name="cmd" value="_donations" />
-          <input type="hidden" name="business" value="TQLCA3XFUYEZ6" />
-          <input type="hidden" name="currency_code" value="USD" />
-          <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal" alt="Donate with PayPal button" />
-          <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
-        </form>  (by card, charges fee)
-      <!-- </p> -->
-      <br>
-      <!-- <p> -->
-        Copyright 2022 Daniel Munro under the MIT free software license</a>.
-        <a href="https://github.com/daniel-munro/pbnify" target="_blank">Source code.</a>
-      <!-- </p> -->
-    </div>
-
+    <div class="container" id="footer">FOOTER HERE</div>
     <!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script> -->
     <script src="scripts/angular.min.js"></script>
     <script src="scripts/lodash.js"></script>
